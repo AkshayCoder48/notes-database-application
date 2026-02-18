@@ -1,45 +1,95 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+import './NoteEditor.css';
 
-const NoteEditor = ({ onSave, initialContent }) => {
-  const [content, setContent] = useState(initialContent || '');
-  const [isSaving, setIsSaving] = useState(false);
+const NoteEditor = ({ note, onSaveNote, onClose }) => {
+  const [title, setTitle] = useState(note?.title || '');
+  const [content, setContent] = useState(note?.content || '');
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    setContent(initialContent || '');
-  }, [initialContent]);
-
-  const handleSave = async () => {
-    if (!content.trim()) {
-      alert('Note content cannot be empty');
+  const handleSave = async (e) => {
+    e.preventDefault();
+    if (!title.trim()) {
+      setError('Title is required');
       return;
     }
-    setIsSaving(true);
+
     try {
-      await onSave(content);
-      setIsSaving(false);
-    } catch (error) {
-      console.error('Failed to save note:', error);
-      setIsSaving(false);
-      alert('Failed to save note. Please try again.');
+      setSaving(true);
+      setError(null);
+      const updatedNote = {
+        id: note?.id || Date.now().toString(),
+        title,
+        content,
+        createdAt: note?.createdAt || new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      await onSaveNote(updatedNote);
+    } catch (err) {
+      setError('Failed to save note');
+      console.error('Error saving note:', err);
+    } finally {
+      setSaving(false);
     }
+  };
+
+  const handleCancel = () => {
+    setTitle(note?.title || '');
+    setContent(note?.content || '');
+    setError(null);
+    onClose();
   };
 
   return (
     <div className="note-editor">
-      <h2>Create/Edit Note</h2>
-      <textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        placeholder="Start typing your note here..."
-        rows={10}
-        cols={50}
-      />
-      <div className="editor-actions">
-        <button onClick={handleSave} disabled={isSaving}>
-          {isSaving ? 'Saving...' : 'Save Note'}
+      <div className="editor-header">
+        <h2>{note ? 'Edit Note' : 'Create New Note'}</h2>
+        <button onClick={handleCancel} className="btn-close">
+          Close
         </button>
-        <button onClick={() => setContent('')}>Clear</button>
       </div>
+      {error && (
+        <div className="error-message">
+          {error}
+        </div>
+      )}
+      <form onSubmit={handleSave} className="editor-form">
+        <input
+          type="text"
+          placeholder="Note Title"
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            setError(null);
+          }}
+          className="title-input"
+        />
+        <textarea
+          placeholder="Note Content..."
+          value={content}
+          onChange={(e) => {
+            setContent(e.target.value);
+            setError(null);
+          }}
+          className="content-input"
+        />
+        <div className="editor-actions">
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="btn-cancel"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={saving || !title.trim()}
+            className="btn-save"
+          >
+            {saving ? 'Saving...' : 'Save Note'}
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

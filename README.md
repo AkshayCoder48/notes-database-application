@@ -5,81 +5,96 @@ A simple note-taking application built with React, Vite, and Puter.js.
 ## Features
 
 - Create, edit, and delete notes
-- Persistent storage using Puter.js
+- Real-time data persistence using Puter.js
+- Search and filter notes
 - Responsive design
-- Modern UI/UX
+- Clean, modern UI
+
+## Tech Stack
+
+- **React 18** - Frontend framework
+- **Vite** - Build tool and dev server
+- **Puter.js** - File system and key-value storage
+- **CSS** - Styling
 
 ## Getting Started
 
-1. Install dependencies:
+1. Clone the repository
+2. Install dependencies:
    bash
    npm install
    
-
-2. Run the development server:
+3. Run the development server:
    bash
    npm run dev
    
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+## Project Structure
 
-## Build for Production
+
+src/
+├── App.jsx              # Main application component
+├── components/          # Reusable components
+│   ├── NoteList.jsx    # Note list display
+│   └── NoteEditor.jsx  # Note creation/editing
+├── App.css             # Global styles
+├── index.jsx           # Application entry point
+└── index.css           # Global CSS reset
+
+
+## Functionality
+
+### Add Note
+- Click "Create New Note" to open the editor
+- Enter a title and content
+- Click "Save Note" to store the note
+
+### Edit Note
+- Click the "Edit" button on any note
+- Modify the title or content
+- Click "Save Note" to update
+
+### Delete Note
+- Click the "Delete" button on any note
+- Confirm deletion
+- Note is removed from storage
+
+### Search/Filter
+- Use the filter input to search notes by title or content
+- Results update in real-time
+
+## Data Persistence
+
+Notes are stored using Puter.js key-value storage:
+- Data is persisted locally in the browser
+- Notes are automatically loaded on app start
+- Changes are saved immediately
+
+## Production Build
+
+To create a production build:
 
 bash
 npm run build
 
 
-## Project Structure
+This generates optimized assets in the `dist` folder.
 
+## Development
 
-├── src/
-│   ├── components/          # React components
-│   │   ├── NoteForm.tsx    # Form to create/edit notes
-│   │   └── NotesList.tsx    # List of all notes
-│   ├── hooks/              # Custom React hooks
-│   │   └── useNotes.ts     # Hook for managing notes
-│   ├── App.tsx            # Main application component
-│   ├── main.tsx           # Application entry point
-│   └── index.css          # Global styles
-├── vite.config.ts        # Vite configuration
-└── package.json         # Dependencies and scripts
-
-
-## Technologies Used
-
-- **React 18**: Frontend framework
-- **Vite**: Build tool and dev server
-- **Puter.js**: Client-side storage and file system
-- **React Router**: Client-side routing
-
-## API Reference
-
-### Note Structure
-
-typescript
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-
-### Available Hooks
-
-- `useNotes()`: Manages notes state and CRUD operations
-- `usePuter()`: Access to Puter.js storage
-
-### Components
-
-- `NoteForm`: Form for creating/editing notes
-- `NotesList`: Displays list of all notes
+This project uses Vite for fast development:
+- Hot Module Replacement (HMR)
+- Fast builds
+- Optimized production builds
 
 ## Browser Support
 
-This application supports all modern browsers (Chrome, Firefox, Safari, Edge).
+- Chrome 88+
+- Firefox 85+
+- Safari 14+
+- Edge 88+
 
 ## License
 
-MIT License
+MIT
